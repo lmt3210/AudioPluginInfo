@@ -11,7 +11,7 @@ AAX plugins and displays information about each one.
 Releases can be downloaded [here](https://www.larrymtaylor.com/software.php).
 
 ## Dependencies
-AudioUnitInfo requires LTCommon. It is available on GitHib 
+AudioPluginInfo requires LTCommon. It is available on GitHib 
 [here](https://github.com/lmt3210/LTCommon).
 
 ## Credits
