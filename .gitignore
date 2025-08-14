@@ -6,11 +6,3 @@
 # Xcode user settings
 xcuserdata/
 
-# Build scripts and supporting files
-build.sh
-clean.sh
-package.sh
-app.plist
-distribution.plist
-requirements.plist
-
