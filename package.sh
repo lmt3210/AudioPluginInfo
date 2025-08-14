@@ -5,13 +5,22 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-if ! [ -n "${DEV_ID_APP}" ] || ! [ -n "${DEV_ID_INST}" ]; then
+if ! [ -n "${DEV_ID_APP}" ] || ! [ -n "${DEV_ID_INST}" ] ||
+   ! [ -n "${DEV_KEY_PROF}" ]; then
     echo "Please set these variables in your environment for code signing:"
     echo "    DEV_ID_APP"
     echo "    DEV_ID_INST"
+    echo "    DEV_KEY_PROF"
     echo "Examples:"
-    echo '    DEV_ID_APP="Developer ID Application: Your Name (12345678)"'
-    echo '    DEV_ID_INST="Developer ID Installer: Your Name (12345678)"'
+    echo '    DEV_ID_APP="Developer ID Application: <your_name> (<team_id>)"'
+    echo '    DEV_ID_INST="Developer ID Installer: <your_name> (<team_id>)"'
+    echo '    DEV_KEY_PROF="<password_label>"'
+    echo -n "password_label is for an app-specific password stored "
+    echo "in the notarytool:"
+    echo '    xcrun notarytool store-credentials "MY_PASSWORD" \'
+    echo '    --apple-id <your_apple_id> --team-id <team_id> \'
+    echo -n '    --password <app-specific password from appleid.apple.com>'
+    echo " (no quotes)"
     exit 1
 fi
 
@@ -55,13 +64,14 @@ if [ "${ACTION}" == "package" ]; then
 
     # Upload for notarization
     xcrun notarytool submit AudioPluginInfo.pkg --keychain-profile \
-        "LT_PASSWORD" --wait
+        ${DEV_KEY_PROF} --wait
 
     # Staple notary ticket to product
     xcrun stapler staple AudioPluginInfo.pkg
 elif [ "${ACTION}" == "log" ]; then
     # Download notarization log file
-    xcrun notarytool log ${SUBMIT_ID} --keychain-profile "LT_PASSWORD" log.json
+    xcrun notarytool log ${SUBMIT_ID} --keychain-profile ${DEV_KEY_PROF} \
+        log.json
 else
     echo "Invalid action ${ACTION}"
     exit 1
